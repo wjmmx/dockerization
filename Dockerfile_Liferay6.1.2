@@ -1,0 +1,25 @@
+# Build image for the 'Library in a box' 
+FROM wjmmx/library:OracleJava7
+MAINTAINER philip wang <philip.wj@gmail.com>
+
+# Dowload Liferay Portal 6.1.2 Community Edition ga3
+RUN wget -Oliferay-portal-tomcat-jre-6.1.2-ce-ga3-20131212143815859.zip http://sourceforge.net/projects/lportal/files/Liferay%20Portal/6.1.2%20GA3/liferay-portal-tomcat-jre-6.1.2-ce-ga3-20131212143815859.zip/download
+
+# install zip
+RUN apt-get -y install zip
+
+# Unzip the Portal Tomcat Bundle
+RUN unzip liferay-portal-tomcat-jre-6.1.2-ce-ga3-20131212143815859.zip
+
+# Create a soft link      
+RUN ln -s /liferay-portal-6.1.2-ce-ga3 liferay
+
+# Update the setenv.sh for optimal JDK settings
+# RUN sed -i.bak '/CATALINA_OPTS\=/ c \CATALINA_OPTS\="$CATALINA_OPTS -server -Duser.timezone\=GMT -Djava.awt.headless\=true -Dfile.encoding\=UTF-8 -Xms1024m -Xmx1024m -XX:NewSize\=256m -XX:MaxNewSize \=256m -XX:PermSize\=256m -XX:MaxPermSize\=256m -XX:+DisableExplicitGC  -Dorg.apache.catalina.loader.WebappClassLoader.ENABLE_CLEAR_REFERENCES\=false"' /liferay/tomcat-7.0.42/bin/setenv.sh
+
+# Expose the ports
+EXPOSE 8080
+
+# Start liferay
+CMD /bin/sh /liferay/tomcat-7.0.40/bin/startup.sh
+CMD tail -f /liferay/tomcat-7.0.40/logs/catalina.out
