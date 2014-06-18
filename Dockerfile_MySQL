@@ -1,0 +1,8 @@
+# Build image for the 'Library in a box' 
+FROM ubuntu:14.04
+MAINTAINER philip wang <philip.wj@gmail.com>
+
+# Install packages
+RUN apt-get update
+RUN apt-get -y install mysql-server
+
