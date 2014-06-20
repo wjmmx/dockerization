@@ -1,15 +1,20 @@
-# Build image for the 'Library in a box' 
+# Build Liferay image 
 FROM wjmmx/library:OracleJava7
 MAINTAINER philip wang <philip.wj@gmail.com>
 
 # Dowload Liferay Portal 6.1.2 Community Edition ga3
-RUN wget -Oliferay-portal-tomcat-jre-6.1.2-ce-ga3-20131212143815859.zip http://sourceforge.net/projects/lportal/files/Liferay%20Portal/6.1.2%20GA3/liferay-portal-tomcat-jre-6.1.2-ce-ga3-20131212143815859.zip/download
+#RUN wget -Oliferay-portal-tomcat-6.1.2-ce-ga3-20130816114619181.zip http://sourceforge.net/projects/lportal/files/Liferay%20Portal/6.1.2%20GA3/liferay-portal-tomcat-6.1.2-ce-ga3-20130816114619181.zip/download
+# Comment out below line if you don't have the liferay installation file in the build folder 
+ADD liferay-portal-tomcat-6.1.2-ce-ga3-20130816114619181.zip /
 
 # install zip
 RUN apt-get -y install zip
 
 # Unzip the Portal Tomcat Bundle
-RUN unzip liferay-portal-tomcat-jre-6.1.2-ce-ga3-20131212143815859.zip
+RUN unzip liferay-portal-tomcat-6.1.2-ce-ga3-20130816114619181.zip
+
+# Remove the installation file
+RUN rm liferay-portal-tomcat-6.1.2-ce-ga3-20130816114619181.zip
 
 # Create a soft link      
 RUN ln -s /liferay-portal-6.1.2-ce-ga3 liferay
@@ -21,5 +26,6 @@ RUN ln -s /liferay-portal-6.1.2-ce-ga3 liferay
 EXPOSE 8080
 
 # Start liferay
-CMD /bin/sh /liferay/tomcat-7.0.40/bin/startup.sh
-CMD tail -f /liferay/tomcat-7.0.40/logs/catalina.out
+CMD /bin/sh /liferay/tomcat-7.0.40/bin/startup.sh && tail -f /liferay/tomcat-7.0.40/logs/catalina.out
+
+
